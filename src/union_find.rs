@@ -12,7 +12,7 @@ impl UnionFind {
     ///
     /// # Constraints
     ///
-    /// * `n` <= `1 << (usize::BITS - 1)` 
+    /// * `n` <= `1 << (usize::BITS - 1)`
     ///
     /// # Complexity
     ///
