@@ -69,7 +69,7 @@ impl<M: Associative + Identity> SegmentTree<M> {
     ///
     /// # Complexity
     ///
-    /// * *Θ*(*log n*)
+    /// * *Θ*(log *n*)
     pub fn set(&mut self, mut index: usize, value: M::T) {
         debug_assert!(index < self.len());
 
@@ -110,8 +110,8 @@ impl<M: Associative + Identity> SegmentTree<M> {
     ///
     /// # Complexity
     ///
-    /// * avelage *O*(*log n*)
-    /// * worst *O*(*log n*)
+    /// * average *O*(log *n*)
+    /// * worst *O*(log *n*)
     pub fn prod<R: std::ops::RangeBounds<usize>>(&self, range: R) -> M::T {
         let mut s = match range.start_bound() {
             std::ops::Bound::Included(&i) => i,
