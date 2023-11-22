@@ -37,7 +37,7 @@ pub struct Pid<'a, T: Copy + Eq + Hash> {
 }
 
 impl<'a, T: Copy + Eq + Hash> Pid<'a, T> {
-    fn new(v: &'a [T]) -> Self {
+    pub fn new(v: &'a [T]) -> Self {
         Pid { v }
     }
 }
