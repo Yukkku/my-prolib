@@ -1,5 +1,5 @@
-use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Sub, SubAssign, Neg};
-use num::{Zero, One};
+use num::{One, Zero};
+use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub, SubAssign};
 
 #[derive(Clone, Copy, PartialEq, Eq, Default)]
 pub struct ModInt<const N: u32> {
@@ -38,16 +38,14 @@ impl<const N: u32> ModInt<N> {
             u -= t as i64 * v;
             (u, v) = (v, u);
         }
-        ModInt { v: u.rem_euclid(N as i64) as u32 }
+        ModInt {
+            v: u.rem_euclid(N as i64) as u32,
+        }
     }
 
     pub const fn pow(self, mut b: u64) -> Self {
         let mut g = self.v;
-        let mut r = if b & 1 == 0 {
-            1
-        } else {
-            self.v
-        };
+        let mut r = if b & 1 == 0 { 1 } else { self.v };
         b >>= 1;
         while b != 0 {
             g = (g as u64 * g as u64 % N as u64) as u32;
@@ -56,7 +54,7 @@ impl<const N: u32> ModInt<N> {
             }
             b >>= 1;
         }
-        ModInt{ v: r }
+        ModInt { v: r }
     }
 }
 
@@ -265,7 +263,7 @@ mod tests {
 
     #[test]
     fn modint_works() {
-        type Mint = ModInt::<998244353>;
+        type Mint = ModInt<998244353>;
 
         let a = Mint::new(314159265);
         let b = Mint::new(358979323);
