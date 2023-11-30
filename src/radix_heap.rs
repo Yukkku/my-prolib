@@ -1,7 +1,6 @@
-pub trait Radix: Ord + Copy {
+pub trait Radix: Ord + Copy + num::Bounded {
     fn dist(&self, r: &Self) -> u32;
 
-    const MAX: Self;
     const BITS: u32;
 }
 
@@ -13,13 +12,12 @@ macro_rules! ui {
                 <$t>::BITS - (self ^ r).leading_zeros()
             }
 
-            const MAX: $t = <$t>::MAX;
             const BITS: u32 = <$t>::BITS;
         }
     )*);
 }
 
-ui!{ u8, u16, u32, u64, u128, usize, i8, i16, i32, i64, i128, isize }
+ui! { u8, u16, u32, u64, u128, usize, i8, i16, i32, i64, i128, isize }
 
 pub struct RadixHeap<T> {
     s: usize,
@@ -63,8 +61,8 @@ impl<T: Radix> RadixHeap<T> {
 
         Self {
             s: 0,
-            m: T::MAX,
-            l: T::MAX,
+            m: T::max_value(),
+            l: T::max_value(),
             d: d.into(),
         }
     }
@@ -104,31 +102,33 @@ impl<T: Radix> RadixHeap<T> {
 
         if self.s == 0 {
             let v = Some(self.m);
-            self.l = T::MAX;
-            self.m = T::MAX;
+            self.l = T::max_value();
+            self.m = T::max_value();
             return v;
         }
 
         let v = self.l.dist(&self.m);
         self.l = self.m;
-        if self.d[v as usize].is_empty() {'a: {
-            for g in (v + 1)..=T::BITS {
-                let g = g as usize;
-                let r = &mut self.d[g];
-                if r.is_empty() {
-                    continue;
-                }
-                let mut max = r.pop().unwrap();
-                for v in r.iter_mut() {
-                    if *v > max {
-                        std::mem::swap(&mut max, v);
+        if self.d[v as usize].is_empty() {
+            'a: {
+                for g in (v + 1)..=T::BITS {
+                    let g = g as usize;
+                    let r = &mut self.d[g];
+                    if r.is_empty() {
+                        continue;
                     }
+                    let mut max = r.pop().unwrap();
+                    for v in r.iter_mut() {
+                        if *v > max {
+                            std::mem::swap(&mut max, v);
+                        }
+                    }
+                    self.m = max;
+                    break 'a;
                 }
-                self.m = max;
-                break 'a;
+                unsafe { std::hint::unreachable_unchecked() }
             }
-            unsafe { std::hint::unreachable_unchecked() }
-        }} else {
+        } else {
             let mut r = vec![];
             std::mem::swap(&mut r, &mut self.d[v as usize]);
             let mut max = r.pop().unwrap();
