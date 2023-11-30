@@ -52,6 +52,8 @@ impl<T> RadixHeap<T> {
     #[inline]
     #[must_use]
     pub unsafe fn peek_unchecked(&self) -> &T {
+        debug_assert_ne!(self.s, 0);
+
         &self.m
     }
 }
