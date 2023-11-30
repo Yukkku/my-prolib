@@ -7,3 +7,6 @@ trait AddEdgeWeight<T, const DIRECTED: bool> {
 
 pub mod dijkstra;
 pub use dijkstra::Dijkstra;
+
+pub mod floyd_warshall;
+pub use floyd_warshall::FloydWarshall;
