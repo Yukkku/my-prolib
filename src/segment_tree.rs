@@ -47,6 +47,7 @@ impl<M: Associative + Identity> SegmentTree<M> {
     ///
     /// * *Θ*(1)
     #[inline]
+    #[must_use]
     pub fn len(&self) -> usize {
         self.l
     }
@@ -57,6 +58,7 @@ impl<M: Associative + Identity> SegmentTree<M> {
     ///
     /// * *Θ*(1)
     #[inline]
+    #[must_use]
     pub fn is_empty(&self) -> bool {
         self.l == 0
     }
@@ -96,6 +98,7 @@ impl<M: Associative + Identity> SegmentTree<M> {
     ///
     /// * *Θ*(1)
     #[inline]
+    #[must_use]
     pub fn get(&self, index: usize) -> &M::T {
         debug_assert!(index < self.len());
 
@@ -112,6 +115,7 @@ impl<M: Associative + Identity> SegmentTree<M> {
     ///
     /// * average *O*(log *n*)
     /// * worst *O*(log *n*)
+    #[must_use]
     pub fn prod<R: std::ops::RangeBounds<usize>>(&self, range: R) -> M::T {
         let mut s = match range.start_bound() {
             std::ops::Bound::Included(&i) => i,
@@ -150,6 +154,7 @@ impl<M: Associative + Identity> SegmentTree<M> {
     ///
     /// * *O*(1)
     #[inline]
+    #[must_use]
     pub fn all_prod(&self) -> Option<&M::T> {
         self.d.last()
     }

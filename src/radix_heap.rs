@@ -28,16 +28,19 @@ pub struct RadixHeap<T> {
 
 impl<T> RadixHeap<T> {
     #[inline]
+    #[must_use]
     pub fn len(&self) -> usize {
         self.s
     }
 
     #[inline]
+    #[must_use]
     pub fn is_empty(&self) -> bool {
         self.s == 0
     }
 
     #[inline]
+    #[must_use]
     pub fn peek(&self) -> Option<&T> {
         if self.s == 0 {
             None
@@ -47,12 +50,14 @@ impl<T> RadixHeap<T> {
     }
 
     #[inline]
+    #[must_use]
     pub unsafe fn peek_unchecked(&self) -> &T {
         &self.m
     }
 }
 
 impl<T: Radix> RadixHeap<T> {
+    #[must_use]
     pub fn new() -> Self {
         let mut d = Vec::with_capacity(T::BITS as usize + 1);
         for _ in 0..=T::BITS {

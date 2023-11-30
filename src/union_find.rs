@@ -17,6 +17,7 @@ impl UnionFind {
     /// # Complexity
     ///
     /// * *Θ*(*n*)
+    #[must_use]
     pub fn new(n: usize) -> UnionFind {
         debug_assert!(n <= 1 << (usize::BITS - 1));
 
@@ -32,6 +33,7 @@ impl UnionFind {
     ///
     /// * *Θ*(1)
     #[inline]
+    #[must_use]
     pub fn len(&self) -> usize {
         self.d.len()
     }
@@ -42,6 +44,7 @@ impl UnionFind {
     ///
     /// * *Θ*(1)
     #[inline]
+    #[must_use]
     pub fn count(&self) -> usize {
         self.c
     }
@@ -93,6 +96,7 @@ impl UnionFind {
     ///
     /// * amortized *O*(*α*(*n*))
     /// * worst *O*(log *n*)
+    #[must_use]
     pub fn find(&mut self, a: usize) -> usize {
         debug_assert!(a < self.len());
 
@@ -119,6 +123,7 @@ impl UnionFind {
     /// # Complexity
     ///
     /// * worst *O*(log *n*)
+    #[must_use]
     pub fn find_imu(&self, mut a: usize) -> usize {
         debug_assert!(a < self.len());
 
@@ -139,6 +144,7 @@ impl UnionFind {
     /// * amortized *O*(*α*(*n*))
     /// * worst *O*(log *n*)
     #[inline]
+    #[must_use]
     pub fn same(&mut self, a: usize, b: usize) -> bool {
         debug_assert!(a < self.len());
         debug_assert!(b < self.len());
@@ -156,6 +162,7 @@ impl UnionFind {
     ///
     /// * worst *O*(log *n*)
     #[inline]
+    #[must_use]
     pub fn same_imu(&self, a: usize, b: usize) -> bool {
         debug_assert!(a < self.len());
         debug_assert!(b < self.len());
@@ -174,6 +181,7 @@ impl UnionFind {
     /// * amortized *O*(*α*(*n*))
     /// * worst *O*(log *n*)
     #[inline]
+    #[must_use]
     pub fn size(&mut self, a: usize) -> usize {
         debug_assert!(a < self.len());
 
@@ -190,6 +198,7 @@ impl UnionFind {
     ///
     /// * worst *O*(log *n*)
     #[inline]
+    #[must_use]
     pub fn size_imu(&self, a: usize) -> usize {
         debug_assert!(a < self.len());
 
@@ -201,6 +210,7 @@ impl UnionFind {
     /// # Complexity
     ///
     /// * *Θ*(*n*)
+    #[must_use]
     pub fn groups(&mut self) -> Box<[Box<[usize]>]> {
         let mut v = Vec::with_capacity(self.len());
         for i in 0..self.len() {
@@ -232,6 +242,7 @@ impl UnionFind {
     /// # Complexity
     ///
     /// * worst *O*(*n* log *n*)
+    #[must_use]
     pub fn groups_imu(&self) -> Box<[Box<[usize]>]> {
         let mut v = Vec::with_capacity(self.len());
         for i in 0..self.len() {

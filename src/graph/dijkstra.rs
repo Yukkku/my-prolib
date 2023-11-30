@@ -9,6 +9,7 @@ pub struct Dijkstra<T> {
 }
 
 impl<T> Dijkstra<T> {
+    #[must_use]
     pub fn new(n: usize) -> Dijkstra<T> {
         let mut d = Vec::with_capacity(n);
         for _ in 0..n {
@@ -75,6 +76,7 @@ impl<T: Radix + num::Bounded> Radix for Pair<T> {
 }
 
 impl<T: num::Zero + Radix + std::ops::Add<Output = T>> Dijkstra<T> {
+    #[must_use]
     pub fn distance(&self, from: usize, to: usize) -> Option<T> {
         debug_assert!(from < self.d.len());
         debug_assert!(to < self.d.len());

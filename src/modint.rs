@@ -8,11 +8,13 @@ pub struct ModInt<const N: u32> {
 
 impl<const N: u32> ModInt<N> {
     #[inline]
+    #[must_use]
     pub const fn new(v: u32) -> Self {
         ModInt { v: v % N }
     }
 
     #[inline]
+    #[must_use]
     pub const unsafe fn new_unchecked(v: u32) -> Self {
         debug_assert!(v < N);
 
@@ -20,10 +22,12 @@ impl<const N: u32> ModInt<N> {
     }
 
     #[inline]
+    #[must_use]
     pub const fn val(&self) -> u32 {
         self.v
     }
 
+    #[must_use]
     pub const fn inv(&self) -> Self {
         debug_assert!(self.v != 0);
 
@@ -43,6 +47,7 @@ impl<const N: u32> ModInt<N> {
         }
     }
 
+    #[must_use]
     pub const fn pow(self, mut b: u64) -> Self {
         let mut g = self.v;
         let mut r = if b & 1 == 0 { 1 } else { self.v };

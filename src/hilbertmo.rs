@@ -47,10 +47,12 @@ impl<'a, T: Copy + Eq + Hash> Moable for Pid<'a, T> {
 
     type U = usize;
 
+    #[must_use]
     fn origin() -> Self::T {
         HashMap::new()
     }
 
+    #[must_use]
     fn convert(v: &Self::T) -> usize {
         v.len()
     }
@@ -98,6 +100,7 @@ impl<'a, T: Copy + Eq + Hash> Moable for Pid<'a, T> {
     }
 }
 
+#[must_use]
 pub fn mo<M: Moable>(m: M, rs: &[(u32, u32)]) -> Box<[M::U]> {
     let mut x = (0..rs.len()).collect::<Vec<_>>();
     x.sort_by_cached_key(|v| hilbert_ord(rs[*v].clone()));

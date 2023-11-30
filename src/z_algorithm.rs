@@ -1,3 +1,4 @@
+#[must_use]
 pub fn z_algorithm<T: PartialEq>(v: &[T]) -> Box<[usize]> {
     if v.is_empty() {
         return [].into();

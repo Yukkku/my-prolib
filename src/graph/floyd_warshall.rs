@@ -7,6 +7,7 @@ pub struct FloydWarshall<T> {
 }
 
 impl<T: num::Zero> FloydWarshall<T> {
+    #[must_use]
     pub fn new(n: usize) -> Self {
         let mut d = Vec::with_capacity(n * 2);
         for i in 0..n {

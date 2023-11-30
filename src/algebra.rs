@@ -1,6 +1,7 @@
 pub trait Magma {
     type T;
 
+    #[must_use]
     fn op(a: &Self::T, b: &Self::T) -> Self::T;
 }
 
@@ -18,11 +19,13 @@ pub trait Identity: Magma {
 
 /// ある要素`a`について`op(a, b)` = `e`を満たす`b`が存在する
 pub trait Inverse: Identity {
+    #[must_use]
     fn rev(a: &Self::T) -> Self::T;
 }
 
 /// 要素`a`, `b`について`op(a, x)` = `b`を満たす`x`が一意である
 pub trait Divisibility: Magma {
+    #[must_use]
     fn div(a: &Self::T, b: &Self::T) -> Self::T;
 }
 
