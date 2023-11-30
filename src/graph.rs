@@ -10,3 +10,6 @@ pub use dijkstra::Dijkstra;
 
 pub mod floyd_warshall;
 pub use floyd_warshall::FloydWarshall;
+
+pub mod union_find;
+pub use union_find::UnionFind;

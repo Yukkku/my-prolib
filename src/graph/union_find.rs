@@ -1,3 +1,5 @@
+use super::AddEdgeSimple;
+
 /// 素集合データ構造
 ///
 /// * Union by Size + Path Compression
@@ -267,6 +269,13 @@ impl UnionFind {
             }
         }
         ans.into_boxed_slice()
+    }
+}
+
+impl AddEdgeSimple<false> for UnionFind {
+    #[inline]
+    fn add_edge(&mut self, from: usize, to: usize) {
+        self.union(from, to);
     }
 }
 
