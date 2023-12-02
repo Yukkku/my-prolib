@@ -2,15 +2,13 @@ use num::{One, Zero};
 use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub, SubAssign};
 
 #[derive(Clone, Copy, PartialEq, Eq, Default)]
-pub struct ModInt<const N: u32> {
-    v: u32,
-}
+pub struct ModInt<const N: u32>(u32);
 
 impl<const N: u32> ModInt<N> {
     #[inline]
     #[must_use]
     pub const fn new(v: u32) -> Self {
-        ModInt { v: v % N }
+        ModInt(v % N)
     }
 
     #[inline]
@@ -18,20 +16,20 @@ impl<const N: u32> ModInt<N> {
     pub const unsafe fn new_unchecked(v: u32) -> Self {
         debug_assert!(v < N);
 
-        ModInt { v }
+        ModInt(v)
     }
 
     #[inline]
     #[must_use]
     pub const fn val(&self) -> u32 {
-        self.v
+        self.0
     }
 
     #[must_use]
     pub const fn inv(&self) -> Self {
-        debug_assert!(self.v != 0);
+        debug_assert!(self.0 != 0);
 
-        let mut a = self.v;
+        let mut a = self.0;
         let mut b = N;
         let mut u = 1_i64;
         let mut v = 0;
@@ -42,15 +40,13 @@ impl<const N: u32> ModInt<N> {
             u -= t as i64 * v;
             (u, v) = (v, u);
         }
-        ModInt {
-            v: u.rem_euclid(N as i64) as u32,
-        }
+        ModInt(u.rem_euclid(N as i64) as u32)
     }
 
     #[must_use]
     pub const fn pow(self, mut b: u64) -> Self {
-        let mut g = self.v;
-        let mut r = if b & 1 == 0 { 1 } else { self.v };
+        let mut g = self.0;
+        let mut r = if b & 1 == 0 { 1 } else { self.0 };
         b >>= 1;
         while b != 0 {
             g = (g as u64 * g as u64 % N as u64) as u32;
@@ -59,80 +55,76 @@ impl<const N: u32> ModInt<N> {
             }
             b >>= 1;
         }
-        ModInt { v: r }
+        ModInt(r)
     }
 }
 
 impl<const N: u32> num::FromPrimitive for ModInt<N> {
     fn from_i64(n: i64) -> Option<Self> {
         let k = n % N as i64;
-        Some(ModInt {
-            v: if k < 0 {
-                (k + N as i64) as u32
-            } else {
-                k as u32
-            },
-        })
+        Some(ModInt(if k < 0 {
+            (k + N as i64) as u32
+        } else {
+            k as u32
+        }))
     }
 
     fn from_u64(n: u64) -> Option<Self> {
-        Some(ModInt {
-            v: (n % N as u64) as u32,
-        })
+        Some(ModInt((n % N as u64) as u32))
     }
 }
 
 impl<const N: u32> num::ToPrimitive for ModInt<N> {
     fn to_i64(&self) -> Option<i64> {
-        Some(self.v as i64)
+        Some(self.0 as i64)
     }
 
     fn to_u64(&self) -> Option<u64> {
-        Some(self.v as u64)
+        Some(self.0 as u64)
     }
 }
 
 impl<const N: u32> Zero for ModInt<N> {
     fn zero() -> Self {
-        ModInt { v: 0 }
+        ModInt(0)
     }
 
     fn is_zero(&self) -> bool {
-        self.v == 0
+        self.0 == 0
     }
 }
 
 impl<const N: u32> One for ModInt<N> {
     fn one() -> Self {
-        ModInt { v: 1 }
+        ModInt(1)
     }
 }
 
 impl<const N: u32> std::fmt::Display for ModInt<N> {
     #[inline]
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.v.fmt(f)
+        self.0.fmt(f)
     }
 }
 
 impl<const N: u32> std::fmt::Debug for ModInt<N> {
     #[inline]
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        self.v.fmt(f)
+        self.0.fmt(f)
     }
 }
 
 impl<const N: u32> From<u32> for ModInt<N> {
     #[inline]
     fn from(value: u32) -> Self {
-        ModInt { v: value % N }
+        ModInt(value % N)
     }
 }
 
 impl<const N: u32> Into<u32> for ModInt<N> {
     #[inline]
     fn into(self) -> u32 {
-        self.v
+        self.0
     }
 }
 
@@ -141,14 +133,8 @@ impl<const N: u32> Add for ModInt<N> {
 
     #[inline]
     fn add(self, rhs: Self) -> Self {
-        let (v, f) = self.v.overflowing_add(rhs.v);
-        if f || v >= N {
-            ModInt {
-                v: v.wrapping_sub(N),
-            }
-        } else {
-            ModInt { v }
-        }
+        let (v, f) = self.0.overflowing_add(rhs.0);
+        ModInt(if f || v >= N { v.wrapping_sub(N) } else { v })
     }
 }
 
@@ -157,14 +143,8 @@ impl<const N: u32> Sub for ModInt<N> {
 
     #[inline]
     fn sub(self, rhs: Self) -> Self {
-        let (v, f) = self.v.overflowing_sub(rhs.v);
-        if f {
-            ModInt {
-                v: v.wrapping_add(N),
-            }
-        } else {
-            ModInt { v }
-        }
+        let (v, f) = self.0.overflowing_sub(rhs.0);
+        ModInt(if f { v.wrapping_add(N) } else { v })
     }
 }
 
@@ -173,9 +153,7 @@ impl<const N: u32> Mul for ModInt<N> {
 
     #[inline]
     fn mul(self, rhs: Self) -> Self {
-        ModInt {
-            v: ((self.v as u64) * (rhs.v as u64) % (N as u64)) as u32,
-        }
+        ModInt(((self.0 as u64) * (rhs.0 as u64) % (N as u64)) as u32)
     }
 }
 
@@ -193,8 +171,8 @@ impl<const N: u32> Neg for ModInt<N> {
 
     #[inline]
     fn neg(mut self) -> Self {
-        if self.v != 0 {
-            self.v = N - self.v;
+        if self.0 != 0 {
+            self.0 = N - self.0;
         }
         self
     }
