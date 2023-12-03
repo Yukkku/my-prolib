@@ -1,6 +1,7 @@
 pub mod graph;
 pub mod hilbertmo;
 pub mod lis;
+pub mod persistent_array;
 pub mod radix_heap;
 pub mod rolling_hash;
 pub mod segment_tree;
