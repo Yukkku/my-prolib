@@ -47,6 +47,11 @@ impl<T> PersistentArray<T> {
         Self(Some(unsafe { qv.pop().unwrap_unchecked() }))
     }
 
+    #[inline]
+    pub fn is_empty(&self) -> bool {
+        self.0.is_none()
+    }
+
     pub fn set(&self, index: usize, value: T) -> Self {
         let Some(e) = &self.0 else {
             panic!();
